@@ -8,7 +8,7 @@ greenlet==0.4.9
 itsdangerous==0.24
 Jinja2==2.8
 MarkupSafe==0.23
-ouimeaux==0.7.9.post0
+-e git+git@github.com:iancmcc/ouimeaux.git#egg=ouimeaux
 pysignals==0.1.2
 python-dateutil==2.4.2
 pytz==2015.6

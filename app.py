@@ -3,18 +3,35 @@ from ouimeaux.environment import Environment
 
 app = Flask(__name__)
 env = Environment()
+bridge = None
 
-def turn_lights_on(room):
-    # get light
-    light.set_state(state=1)
+def target_and_method_for(target_name):
+    groups = bridge.bridge_get_groups()
+    if target_name in groups.keys():
+        target = groups[target_name]
+        method = bridge.group_set_state
+    else:
+        lights = bridge.bridge_get_lights()
+        if target_name in lights.keys():
+            target = lights[target_name]
+            method = bridge.light_set_state
 
-def turn_lights_off(room):
-    # get light
-    light.set_state(state=0)
+    return (target, method)
 
-def dim_lights(level, room):
-    # get light
-    light.set_state(dim=int(level))
+def turn_lights_on(room=None, light=None):
+    target_name = room or light
+    (target, method) = target_and_method_for(target_name)
+    method(target, state=1)
+
+def turn_lights_off(room=None, light=None):
+    target_name = room or light
+    (target, method) = target_and_method_for(target_name)
+    method(target, state=0)
+
+def dim_lights(level, room=None, light=None):
+    target_name = room or light
+    (target, method) = target_and_method_for(target_name)
+    method(target, dim=int(level))
     
 @app.route('/lights/<action>')
 def light_control(action):
@@ -37,4 +54,4 @@ if __name__ == '__main__':
     env.start()
     env.discover()
     bridge = env.get_bridge('WeMo Link')
-    app.run()
+    app.run(debug=True)
