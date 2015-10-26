@@ -6,9 +6,6 @@ env = Environment()
 bridge = None
 
 def target_and_method_for(target_name):
-    env.start()
-    env.discover()
-    bridge = env.get_bridge('WeMo Link')
     groups = bridge.bridge_get_groups()
     target, method = None, None
     if target_name in groups.keys():
@@ -26,9 +23,7 @@ def target_and_method_for(target_name):
 
 def turn_lights_on(room=None, light=None):
     target_name = room or light
-    print target_name
     (target, state_get, state_set) = target_and_method_for(target_name[0])
-
     method(target, state=1)
 
 def turn_lights_off(room=None, light=None):
@@ -60,5 +55,7 @@ def light_control(action):
 
 
 if __name__ == '__main__':
-    app.debug = True
+    env.start()
+    env.discover()
+    bridge = env.get_bridge('WeMo Link')
     app.run()
